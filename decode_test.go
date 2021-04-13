@@ -251,6 +251,7 @@ var unmarshalTests = []unmarshalTest{
 
 	{in: `{"alpha": "abc", "alphabet": "xyz"}`, ptr: new(U), out: U{Alphabet: "abc"}},
 	{in: `{"alpha": "abc"}`, ptr: new(U), out: U{Alphabet: "abc"}},
+	{in: `{"alpha": 'abc'}`, ptr: new(U), out: U{Alphabet: "abc"}},
 	{in: `{"alphabet": "xyz"}`, ptr: new(U), out: U{}},
 
 	// syntax errors
