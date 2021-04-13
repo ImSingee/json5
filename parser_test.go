@@ -20,6 +20,13 @@ func TestParseSingleQuoteString(t *testing.T) {
 	equals(t, "foo", val)
 }
 
+func TestParseBackQuoteString(t *testing.T) {
+	parser := json5.Parser{}
+	val, err := parser.Parse([]byte("  `foo`  "))
+	noError(t, err)
+	equals(t, "foo", val)
+}
+
 func TestParseNumber(t *testing.T) {
 	parser := json5.Parser{}
 	val, err := parser.Parse([]byte(` 100 `))
@@ -73,7 +80,7 @@ func TestParseNestedArray(t *testing.T) {
 
 func TestParseObject(t *testing.T) {
 	parser := json5.Parser{}
-	raw, err := parser.Parse([]byte(` { "foo": 1, "bar": 2, "baz": 3 } `))
+	raw, err := parser.Parse([]byte(` { 'foo': 1, "bar": 2, "baz": 3 } `))
 	noError(t, err)
 	val, ok := raw.(map[string]interface{})
 	equals(t, true, ok)

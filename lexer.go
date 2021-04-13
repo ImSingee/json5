@@ -51,13 +51,12 @@ type Token struct {
 
 // Lexer reads and tokenizes a JSON string
 type Lexer struct {
-	str   []byte
-	pos   int
-	state lexerState
-	buf   stringBuffer
-	ps    *Parser
-
-	singleQuote bool
+	str       []byte
+	pos       int
+	state     lexerState
+	buf       stringBuffer
+	ps        *Parser
+	quoteWith byte
 }
 
 // Scan creates a Lexer that scans the give string
@@ -131,13 +130,9 @@ func (l *Lexer) readValue(c byte) (tk Token, err error) {
 	// TODO: only this case '[', '{':
 	case '[', ']', '{', '}', ',', ':':
 		l.state = statePunctuator
-	case '"':
+	case '"', '\'', '`':
 		l.state = stateString
-		l.singleQuote = false
-		l.pos++
-	case '\'':
-		l.state = stateString
-		l.singleQuote = true
+		l.quoteWith = c
 		l.pos++
 	case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 		l.state = stateNumber
@@ -181,13 +176,8 @@ func (l *Lexer) readString(c byte) (tk Token, err error) {
 		l.pos++
 		return
 	}
-	if c == '\'' && l.singleQuote {
-		value := l.buf.String()
-		tk = Token{TypeString, value}
-		l.pos++
-		return
-	}
-	if c == '"' && !l.singleQuote {
+
+	if c == l.quoteWith && (c == '\'' || c == '"' || c == '`') {
 		value := l.buf.String()
 		tk = Token{TypeString, value}
 		l.pos++
