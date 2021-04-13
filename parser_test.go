@@ -6,9 +6,16 @@ import (
 	"github.com/ImSingee/json5"
 )
 
-func TestParseString(t *testing.T) {
+func TestParseDoubleQuoteString(t *testing.T) {
 	parser := json5.Parser{}
 	val, err := parser.Parse([]byte(` "foo" `))
+	noError(t, err)
+	equals(t, "foo", val)
+}
+
+func TestParseSingleQuoteString(t *testing.T) {
+	parser := json5.Parser{}
+	val, err := parser.Parse([]byte(`  'foo'  `))
 	noError(t, err)
 	equals(t, "foo", val)
 }
@@ -135,12 +142,13 @@ func TestParseNestedMixedObject(t *testing.T) {
 	raw, err := parser.Parse([]byte(`
 	{
 		"foo": 1,
-		"bar": [1, 2],
-		"baz": {
+		"bar": [1, 2], // a
+		"baz": { // b
 			"qux": [1, 2],
 			"quux": {
 				"quuz": 100,
-				"corge": 200
+                "asd": '123',
+				"corge": 200 // c
 			}
 		}
 	}
