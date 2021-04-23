@@ -193,7 +193,7 @@ func (l *Lexer) readString(c byte) (tk Token, err error) {
 func (l *Lexer) readEscapeChar(c byte) (tk Token, err error) {
 	var value byte
 	switch c {
-	case '"', '\\', '/':
+	case '"', '\'', '`', '\\', '/':
 		value = c
 	case 'b':
 		value = '\b'

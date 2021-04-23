@@ -13,11 +13,25 @@ func TestParseDoubleQuoteString(t *testing.T) {
 	equals(t, "foo", val)
 }
 
+func TestParseDoubleQuoteStringWithEscape(t *testing.T) {
+	parser := json5.Parser{}
+	val, err := parser.Parse([]byte(` "A\"B" `))
+	noError(t, err)
+	equals(t, `A"B`, val)
+}
+
 func TestParseSingleQuoteString(t *testing.T) {
 	parser := json5.Parser{}
 	val, err := parser.Parse([]byte(`  'foo'  `))
 	noError(t, err)
 	equals(t, "foo", val)
+}
+
+func TestParseSingleQuoteStringWithEscape(t *testing.T) {
+	parser := json5.Parser{}
+	val, err := parser.Parse([]byte(`  'A\'B'  `))
+	noError(t, err)
+	equals(t, "A'B", val)
 }
 
 func TestParseBackQuoteString(t *testing.T) {
